@@ -20,6 +20,7 @@ document.getElementById('create-room').addEventListener('click',function(){
 
     peer.on('open',function(id){
         console.log("peer id: "+id);
+        alert(roomId);
         if(getUserMedia ){
             getUserMedia(
                 {
