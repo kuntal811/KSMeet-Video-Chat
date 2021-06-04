@@ -13,7 +13,7 @@ document.getElementById('create-room').addEventListener('click',function(){
         return;
     }
     */
-createCanvas();
+   createCanvas();
    roomId = randomAlpha(3)+"-"+randomAlpha(3);
     //create peer with id
     peer = new Peer(roomId);
@@ -83,6 +83,7 @@ document.getElementById('join-room').addEventListener('click',function(){
         alert('please enter room no');
         return;
     }
+    createCanvas();
     peer = new Peer();
     /*
     peer.on('open',function(id){

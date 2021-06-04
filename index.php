@@ -56,8 +56,12 @@
                 </video>
             </div>
         </div>
-
-        <a href="#" id="disconnect-call">Disconnect</a>
+        <div class="call-button">
+            <a href="#" id="mute-video"><img src="icon/mute-mic.png"></a>
+            <a href="#" id="mute-audio"><img src="icon/mute-camera.png"></a>
+            <a href="#" id="end-call"><img src="icon/call-end.png"></a>
+            <a href="#" id="share-screen"><img src="icon/screen.png"></a>
+        </div>
     </div>
 <script src="script.js"></script>
 </body>
