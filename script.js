@@ -6,11 +6,15 @@ let localStream;
 var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 document.getElementById('create-room').addEventListener('click',function(){
+    /*
     var roomId = document.getElementById('room-id').value;
     if(roomId == "" || roomId == " "){
         alert('please enter room no');
         return;
     }
+    */
+   createCanvas();
+   roomId = randomAlpha(3)+"-"+randomAlpha(3);
     //create peer with id
     peer = new Peer(roomId);
 
@@ -61,6 +65,10 @@ document.getElementById('create-room').addEventListener('click',function(){
         });
 
     });
+    peer.on('disconnected', function() {
+        console.log("disconnected ");
+        peer.disconnect();
+    });
 
 
 });
@@ -68,7 +76,6 @@ document.getElementById('create-room').addEventListener('click',function(){
 
 
 
-//let dataConnection;
 //join
 document.getElementById('join-room').addEventListener('click',function(){
     var roomId = document.getElementById('room-id').value;
@@ -76,6 +83,7 @@ document.getElementById('join-room').addEventListener('click',function(){
         alert('please enter room no');
         return;
     }
+    createCanvas();
     peer = new Peer();
     /*
     peer.on('open',function(id){
@@ -131,6 +139,11 @@ document.getElementById('join-room').addEventListener('click',function(){
             console.log("getuserMedia not supported ");
         }
     });
+
+    peer.on('disconnected', function() {
+        console.log("disconnected ");
+        peer.des
+    });
     
 });
 
@@ -140,6 +153,25 @@ function sendMsg(){
 }
 //##########################
 
+document.getElementById('disconnect-call').addEventListener('click',function(){
+    peer.disconnect();
+    peer.destroy();
+});
 
+function randomAlpha(length) {
+    var result           = [];
+    var characters       = 'abcdefghijklmnopqrstuvwxyz';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result.push(characters.charAt(Math.floor(Math.random() * 
+ charactersLength)));
+   }
+   return result.join('');
+}
+
+function createCanvas(){
+    document.getElementById('home').style.display="none";
+    document.getElementById('meeting').style.display="block";
+}
 
 
