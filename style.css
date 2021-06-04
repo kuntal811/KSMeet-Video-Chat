@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,500;1,100;1,200;1,400;1,500;1,600&display=swap');
+body{
+    padding: 0;
+    margin: 0;
+    font-family: 'Work Sans', sans-serif;
+}
+#meeting{
+    display: none;
+}
+#navbar{
+    height: 60px;
+    box-shadow: 5px 0px 10px 0 rgba(0,0,0,0.2);
+}
+#main{
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.cover{
+    flex: 4;
+}
+.hero{
+    flex: 3;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+.hero h1{
+    text-align: center;
+}
+.hero p{
+    color: #6a6e74;
+    text-align: center;
+}
+.cover img{
+    width: 100%;
+    height: 100%;
+}
+.btn{
+    color: #fff;
+    background: #6884CD;
+    padding: 2px 16px 0px 12px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-weight: 500;
+    line-height: 35px
+}
+input[type="text"]{
+    padding-left: 20px;
+    height: 36px;
+    line-height: 24px;
+    border-radius: 4px;
+    border:1px solid #dadce0;
+}
+#create-room{
+    min-width: 150px;
+    margin: 20px;
+}
+#create-room svg{
+    position: relative;
+    top: 6px;
+    height: 22px;
+    width: 22px;
+    fill: #fff;
+    padding-right: 5px;
+}
+.btn-div{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center; 
+}
+.join{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#self-video{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 250px;
+}
+#remote-video{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100vw;
+}
+@media screen and (max-width:800px){
+    #main{
+        display: block;
+    }
+    .hero{
+    flex: 3;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+}
