@@ -55,6 +55,7 @@ document.getElementById('create-room').addEventListener('click',function(){
 
     peer.on('open',function(id){
         console.log("peer id: "+id);
+        alert(id);
         if(getUserMedia ){
             getUserMedia(
                 streamSetting,
