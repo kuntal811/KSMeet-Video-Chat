@@ -58,9 +58,16 @@
             <div id="meeting-link-container">
 
             </div>
-
-            <div class="chat-container" style="border:2px solid red;">
-            
+            <button class="open-chat" id="open-chat"><i class="fab fa-facebook-messenger"></i></button>
+            <div class="chat-container" id="chat-container">
+                <h2 class="chat-header">Chat</h2>
+                <div class="chat-wrapper" id="chat">
+                    
+                </div>
+                <div class="msg-btn">
+                    <input type="text" class="msg" id="msg" placeholder="Write your message">
+                    <button class="send-msg" id="send-msg"><i class="fas fa-paper-plane"></i></button>
+                </div>
             </div>
         </div>
         <div class="call-button">

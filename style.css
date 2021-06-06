@@ -48,6 +48,9 @@ html,body{
     font-weight: 500;
     line-height: 35px
 }
+button:hover{
+    cursor: pointer;
+}
 input[type="text"]{
     padding-left: 20px;
     height: 36px;
@@ -105,7 +108,7 @@ footer{
     min-height: 120px;
     height: 150px;
     max-height: 200px;
-    z-index: 99;
+    z-index: 10;
     object-fit: cover !important;
 }
 #remote-video{
@@ -144,6 +147,111 @@ button{
 .call-button a img{
     width: 32px;
 }
+
+.open-chat{
+    position: absolute;
+    bottom: 40px;
+    right: 10px;
+}
+.open-chat i{
+    color: #fffc;
+    font-size: 44px;
+}
+@keyframes fade-in{
+        0%{ opacity: 0;}
+        100%{opacity: 1;}
+}
+@keyframes fade-out{
+    0%{ opacity: 1;}
+    100%{opacity: 0;}
+}
+.fadeout{
+    animation: fade-out 1s forwards;
+}
+.chat-container{
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 450px;
+    width: 300px;
+    background: #EDF0F5;
+    border-radius: 10px; 
+    animation: fade-in 1s forwards;
+    z-index: 11;
+}
+.chat-wrapper{
+    height: 350px;
+    padding: 0px 20px;
+    overflow-y: scroll; 
+}
+.chat-header{
+    font-size: 18px;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+    margin:0;
+    padding:10px;
+}
+.remote-msg span{
+    color: #222;
+    text-align: left;
+    background: #fff;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border-top-left-radius: 0px;
+}
+.self-msg{
+    text-align: right;
+}
+.self-msg span{
+    display: inline-block;
+    color: #222;
+    text-align: right;
+    background: #D0D3E3;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border-bottom-right-radius: 0px;
+    display: inline-block;
+}
+.remote-msg span,.self-msg span{
+    color: #222;
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.1);
+}
+.msg-btn{
+   display: flex;
+   justify-content: center;
+   margin-top: 10px;
+}
+.send-msg{
+    background: #6884CD;
+    border-radius: 5px;
+    padding: 10px 15px;
+}
+.send-msg i{
+    color: #fff;
+}
+.msg{
+    border: none;
+}
+input[type="text"]{
+    border: none;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1)
+}
+input[type="text"]:focus{
+    border: none;
+    outline: none;
+}
+
+
+
+
+
+
+
+
+
+
 @media screen and (max-width:800px){
     #main{
         display: block;
@@ -153,4 +261,15 @@ button{
     margin-left: 10px;
     margin-right: 10px;
 }
+}
+@media screen and (max-width:550px){
+    .chat-container{
+        top: 10%;
+        transform: translateY(-10%);
+    }
+    .open-chat{
+        position: absolute;
+        bottom: 100px;
+        right: 10px;
+    }
 }

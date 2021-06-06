@@ -86,6 +86,9 @@ document.getElementById('create-room').addEventListener('click',function(){
 
         data.on('data',function(data){
             console.log("server: "+data);
+            let html = '<p class="remote-msg"><span>'+data+'</span></p>';
+            document.getElementById('chat').innerHTML += html;
+            scrollBottom();
             
         });
 
@@ -126,7 +129,10 @@ document.getElementById('join-room').addEventListener('click',function(){
 
         dataConnection = peer.connect(roomId);
         dataConnection.on('data',function(data){
-        console.log("user: "+data);
+            console.log("user: "+data);
+            let html = '<p class="remote-msg"><span>'+data+'</span></p>';
+            document.getElementById('chat').innerHTML += html;
+            scrollBottom();
         });
 
 
@@ -184,10 +190,16 @@ function destroyCanvas(){
 }
 
 //######################
-//button function
-function sendMsg(){
-    dataConnection.send("hello");
-}
+//Send message function
+document.getElementById('send-msg').addEventListener('click',function(){
+    let msg = document.getElementById('msg').value;
+    dataConnection.send(msg);
+    let html = '<p class="self-msg"><span>'+msg+'</span></p>';
+    document.getElementById('chat').innerHTML += html;
+    scrollBottom();
+    document.getElementById('msg').value="";
+
+});
 
 document.getElementById('mute-audio').addEventListener('click',function(){
     if(localStream.getAudioTracks()[0]['enabled']){
@@ -231,4 +243,26 @@ document.getElementById('share-screen').addEventListener('click',function(){
     getUserMedia = navigator.getDisplayMedia;
 
 });
+
+document.getElementById('open-chat').addEventListener('click',function(e){
+    let elm = document.getElementById('chat-container');
+    if(elm.style.display == "none"){
+        elm.style.display="block";
+        document.getElementById('open-chat').children[0].classList.remove('fab','fa-facebook-messenger');
+        document.getElementById('open-chat').children[0].classList.add('fas','fa-times');
+    }else{
+        elm.style.display="none";
+        document.getElementById('open-chat').children[0].classList.remove('fas','fa-times');
+        document.getElementById('open-chat').children[0].classList.add('fab','fa-facebook-messenger');
+    }
+
+
+});
+
+function scrollBottom(){
+    let elm = document.getElementById('chat');
+    if((elm.scrollTop + elm.clientHeight) != elm.scrollHeight){
+        elm.scrollTop = elm.scrollHeight;
+    }
+}
 //##########################
