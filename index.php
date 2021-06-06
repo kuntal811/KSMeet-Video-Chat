@@ -55,14 +55,22 @@
                     <source src="" type="">
                 </video>
             </div>
+            <div id="meeting-link-container">
+
+            </div>
+
+            <div class="chat-container" style="border:2px solid red;">
+            
+            </div>
         </div>
         <div class="call-button">
-            <a href="#" id="mute-video"><img src="icon/mute-mic.png"></a>
-            <a href="#" id="mute-audio"><img src="icon/mute-camera.png"></a>
-            <a href="#" id="end-call"><img src="icon/call-end.png"></a>
-            <a href="#" id="share-screen"><img src="icon/screen.png"></a>
+            <button id="mute-audio"><i class="fas fa-microphone"></i></button>
+            <button id="mute-video"><i class="fas fa-video"></i></button>
+            <button id="call-end"><i class="fas fa-phone"></i></button>
+            <button id="share-screen"><i class="fas fa-desktop"></i></button>
         </div>
     </div>
+<script src="https://kit.fontawesome.com/9b92be56de.js" crossorigin="anonymous"></script>
 <script src="script.js"></script>
 </body>
 </html>

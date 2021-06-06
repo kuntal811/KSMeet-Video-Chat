@@ -3,7 +3,42 @@ let dataConnection;
 let rooomId;
 let peer;
 let localStream;
+let streamSetting = {
+                        video: {
+                            width:  640,
+                            height: 360,
+                            },
+                        audio:{
+                                echoCancellation: true,
+                                noiseSuppression: true,
+
+                            },
+                    }
 var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+//local video
+function setLocalVideo(){
+    if(getUserMedia ){
+        getUserMedia(
+            {
+                video: {width:640,height:360},
+                audio: false,
+            },
+            function(stream){
+                var video = document.querySelector('#self-video');
+                video.srcObject = stream;
+                video.onloadedmetadata = function(e){
+                    video.play();
+                }
+            },  
+            function(err){
+                console.log(err);
+            }
+        );
+    }else{
+        console.log("getuserMedia not supported ");
+    }
+}
 
 document.getElementById('create-room').addEventListener('click',function(){
     /*
@@ -20,23 +55,12 @@ document.getElementById('create-room').addEventListener('click',function(){
 
     peer.on('open',function(id){
         console.log("peer id: "+id);
-        alert(roomId);
         if(getUserMedia ){
             getUserMedia(
-                {
-                    video: {
-                        width:  1080,
-                        height: 720,
-                        },
-                    audio: true,
-                },
+                streamSetting,
                 function(stream){
-                    localStream = stream
-                    var video = document.querySelector('video');
-                    video.srcObject = localStream;
-                    video.onloadedmetadata = function(e){
-                        video.play();
-                    }
+                    localStream = stream;
+                    setLocalVideo();
                 },  
                 function(err){
                     console.log(err);
@@ -68,7 +92,6 @@ document.getElementById('create-room').addEventListener('click',function(){
     });
     peer.on('disconnected', function() {
         console.log("disconnected ");
-        peer.disconnect();
     });
 
 
@@ -110,20 +133,10 @@ document.getElementById('join-room').addEventListener('click',function(){
 
         if(getUserMedia){
             getUserMedia(
-                {
-                    video: {
-                        width:  1080,
-                        height: 720,
-                        },
-                    audio: true,
-                },
+                streamSetting,
                 function(stream){
                     localStream = stream;
-                    var video = document.querySelector('video');
-                    video.srcObject = stream;
-                    video.onloadedmetadata = function(e){
-                        video.play();
-                    }
+                    setLocalVideo();
 
                     var call = peer.call(roomId,localStream);
                     call.on('stream',function(stream){
@@ -143,21 +156,11 @@ document.getElementById('join-room').addEventListener('click',function(){
 
     peer.on('disconnected', function() {
         console.log("disconnected ");
-        peer.des
+        peer.destroy();
     });
     
 });
 
-//######################
-function sendMsg(){
-    dataConnection.send("hello");
-}
-//##########################
-
-document.getElementById('disconnect-call').addEventListener('click',function(){
-    peer.disconnect();
-    peer.destroy();
-});
 
 function randomAlpha(length) {
     var result           = [];
@@ -170,9 +173,62 @@ function randomAlpha(length) {
    return result.join('');
 }
 
+
 function createCanvas(){
     document.getElementById('home').style.display="none";
     document.getElementById('meeting').style.display="block";
 }
+function destroyCanvas(){
+    document.getElementById('meeting').style.display="none";
+    document.getElementById('home').style.display="block";
+}
+
+//######################
+//button function
+function sendMsg(){
+    dataConnection.send("hello");
+}
+
+document.getElementById('mute-audio').addEventListener('click',function(){
+    if(localStream.getAudioTracks()[0]['enabled']){
+        localStream.getAudioTracks()[0]['enabled'] =false;
+        let elm = document.getElementById('mute-audio').children[0];
+        elm.classList.remove('fa-microphone');
+        elm.classList.add('fa-microphone-slash');
+    }else{
+        let elm = document.getElementById('mute-audio').children[0];
+        localStream.getAudioTracks()[0]['enabled'] =true;
+        elm.classList.remove('fa-microphone-slash');
+        elm.classList.add('fa-microphone');
+    } 
+});
 
 
+document.getElementById('mute-video').addEventListener('click',function(){
+    if(localStream.getVideoTracks()[0]['enabled']){
+        localStream.getVideoTracks()[0]['enabled'] =false;
+        let elm = document.getElementById('mute-video').children[0];
+        elm.classList.remove('fa-video');
+        elm.classList.add('fa-video-slash');
+
+    }else{
+        localStream.getVideoTracks()[0]['enabled'] =true;
+        let elm = document.getElementById('mute-video').children[0];
+        elm.classList.remove('fa-video-slash');
+        elm.classList.add('fa-video');
+    } 
+});
+
+document.getElementById('call-end').addEventListener('click',function(){
+    if(confirm("Are you sure to end the meet ?")){
+        localStream.getTracks().forEach((track)=>{track.stop()});
+        peer.disconnect();
+        destroyCanvas();
+    }
+
+});
+document.getElementById('share-screen').addEventListener('click',function(){
+    getUserMedia = navigator.getDisplayMedia;
+
+});
+//##########################
