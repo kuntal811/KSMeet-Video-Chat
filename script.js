@@ -3,6 +3,8 @@ let dataConnection;
 let rooomId;
 let peer;
 let localStream;
+let selfStream;
+let remoteStreamTest;
 let streamSetting = {
                         video: {
                             width:  640,
@@ -25,8 +27,9 @@ function setLocalVideo(){
                 audio: false,
             },
             function(stream){
+                selfStream = stream;
                 var video = document.querySelector('#self-video');
-                video.srcObject = stream;
+                video.srcObject = selfStream;
                 video.onloadedmetadata = function(e){
                     video.play();
                 }
@@ -48,20 +51,25 @@ document.getElementById('create-room').addEventListener('click',function(){
         return;
     }
     */
-   createCanvas();
+    document.getElementById('create-room').children[1].classList.add("fas","fa-circle-notch","fa-spin");
+   //createCanvas();
    roomId = randomAlpha(3)+"-"+randomAlpha(3);
     //create peer with id
     peer = new Peer(roomId);
 
     peer.on('open',function(id){
         console.log("peer id: "+id);
-        alert(id);
+        //alert(id);
         if(getUserMedia ){
             getUserMedia(
                 streamSetting,
                 function(stream){
                     localStream = stream;
                     setLocalVideo();
+                    document.getElementById('meeting-id').value = roomId;
+                    createCanvas();
+                    document.getElementById('create-room').children[1].classList.remove("fas","fa-circle-notch","fa-spin");
+
                 },  
                 function(err){
                     console.log(err);
@@ -73,9 +81,14 @@ document.getElementById('create-room').addEventListener('click',function(){
 
     });
     peer.on('call',function(data){
+        document.getElementById('show-msg').style.display="none";
         data.answer(localStream);
         data.on('stream',function(remoteStream){
          var video =  document.querySelector("#remote-video");
+         remoteStreamTest = remoteStream;
+         remoteStream.getTracks()[0].onmute = function(){
+             alert("muted");
+         }
          video.srcObject = remoteStream;
          video.play();
       });
@@ -95,7 +108,7 @@ document.getElementById('create-room').addEventListener('click',function(){
 
     });
     peer.on('disconnected', function() {
-        console.log("disconnected ");
+        window.location.reload();
     });
 
 
@@ -111,21 +124,10 @@ document.getElementById('join-room').addEventListener('click',function(){
         alert('please enter room no');
         return;
     }
-    createCanvas();
+    document.getElementById('join-room').children[0].classList.add("fas","fa-circle-notch","fa-spin");
+
     peer = new Peer();
-    /*
-    peer.on('open',function(id){
 
-       console.log("connected with: "+id);
-       dataConnection = peer.connect(roomId);
-       dataConnection.send("hello");
-
-
-       dataConnection.on('data',function(data){
-        console.log("user: "+data);
-    });
-    });
-    */
     peer.on('open',function(id){
 
         dataConnection = peer.connect(roomId);
@@ -144,9 +146,13 @@ document.getElementById('join-room').addEventListener('click',function(){
                 function(stream){
                     localStream = stream;
                     setLocalVideo();
+                    document.getElementById('show-msg').innerHTML = "Connecting . .";
+                    createCanvas();
+                    document.getElementById('join-room').children[0].classList.remove("fas","fa-circle-notch","fa-spin");
 
                     var call = peer.call(roomId,localStream);
                     call.on('stream',function(stream){
+                        document.getElementById('show-msg').innerHTML = "";
                         var video =  document.querySelector("#remote-video");
                         video.srcObject = stream;
                         video.play();
@@ -235,6 +241,7 @@ document.getElementById('mute-video').addEventListener('click',function(){
 document.getElementById('call-end').addEventListener('click',function(){
     if(confirm("Are you sure to end the meet ?")){
         localStream.getTracks().forEach((track)=>{track.stop()});
+        selfStream.getTracks().forEach((track)=>{track.stop()});
         peer.disconnect();
         destroyCanvas();
     }
@@ -259,6 +266,20 @@ document.getElementById('open-chat').addEventListener('click',function(e){
 
 
 });
+
+document.querySelector('.copy-meeting-id').children[1].addEventListener('click',function(){
+    let text = document.getElementById("meeting-id");
+    text.select();
+    text.setSelectionRange(0,999999);
+    document.execCommand('copy');
+    document.getElementById('coppied-msg').innerText="Meeting id coppied";
+    setTimeout(function(){
+        document.getElementById('coppied-msg').innerText="";
+    },3000);
+})
+
+
+
 
 function scrollBottom(){
     let elm = document.getElementById('chat');

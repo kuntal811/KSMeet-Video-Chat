@@ -6,9 +6,40 @@ html,body{
     overflow-x:hidden;
 }
 #meeting{
+    position: relative;
     display: none;
+    height: 100vh;
+    width: 100vw;
+    background-color: #222;
     overflow: hidden;
 }
+#show-msg{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 100vw;
+    text-align: center;
+    z-index: 11;
+    color: #fff;
+}
+#copy-meeting-id{
+    display: flex;
+}
+#meeting-id{
+    width: 80px;
+    height: 30px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    background: #fff5;
+    color: #fff;
+}
+.copy-meeting-id button i{
+    color:#fff;
+    font-size: 20px;
+}   
 #navbar{
     height: 60px;
     box-shadow: 5px 0px 10px 0 rgba(0,0,0,0.2);
@@ -88,11 +119,6 @@ footer{
     align-items: center;
 }
 
-#meeting{
-    height: 100vh;
-    width: 100vw;
-    background-color: #222;
-}
 .receiver{
     
 }
@@ -180,7 +206,7 @@ button{
     background: #EDF0F5;
     border-radius: 10px; 
     animation: fade-in 1s forwards;
-    z-index: 11;
+    z-index: 12;
 }
 .chat-wrapper{
     height: 350px;
@@ -272,5 +298,14 @@ input[type="text"]:focus{
         position: absolute;
         bottom: 100px;
         right: 10px;
+    }
+    #self-video{
+        min-width: 80px;
+        width: 100px;
+        max-width: 140px;
+        min-height: 80px;
+        height: 100px;
+        max-height: 140px;
+
     }
 }
