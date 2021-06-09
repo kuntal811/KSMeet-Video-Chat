@@ -9,8 +9,8 @@ let currentPeer;
 let streamSetting = {
                         video: {
                             frameRate:{ideal:10,max:15},
-                            width:  1080,
-                            height:  720,
+                            width:  720,
+                            height:  480,
                             },
                         audio:{
                                 echoCancellation: true,
