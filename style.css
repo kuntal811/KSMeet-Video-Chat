@@ -5,6 +5,10 @@ html,body{
     font-family: 'Work Sans', sans-serif;
     overflow-x:hidden;
 }
+#logo{
+    margin: 10px;
+    margin-left: 20px;
+}
 #meeting{
     position: relative;
     display: none;
@@ -35,13 +39,14 @@ html,body{
     padding: 5px;
     background: #fff5;
     color: #fff;
+    outline: none;
 }
 .copy-meeting-id button i{
     color:#fff;
     font-size: 20px;
 }   
 #navbar{
-    height: 60px;
+    height: 70px;
     box-shadow: 5px 0px 10px 0 rgba(0,0,0,0.2);
 }
 #main{
@@ -78,7 +83,8 @@ html,body{
     border: 1px solid transparent;
     border-radius: 4px;
     font-weight: 500;
-    line-height: 35px
+    line-height: 35px;
+    box-shadow: 0 4px 10px 0 rgba(0,0,0,0.4);
 }
 button:hover{
     cursor: pointer;
@@ -114,16 +120,34 @@ input[type="text"]{
     align-items: center;
 }
 footer{
+    
+    position: relative;
+    bottom: 0;
+    width: 100vw;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-
-.receiver{
-    
+footer p{
+    text-align: center;
 }
+footer .social-icon a{
+    margin: 10px;
+}
+footer .social-icon a i{
+    color: #6884CD;
+    font-size: 35px;
+}
+.fa-heart{
+    color:red;
+}
+footer p:nth-child(3){
+    margin:0;
+    margin-bottom: 10px;
+}
+
 #self-video{
-    border: 3px solid #aaa;
     overflow: hidden;
     border-radius: 5px;
     position: absolute;
@@ -136,7 +160,8 @@ footer{
     height: 150px;
     max-height: 200px;
     z-index: 10;
-    object-fit: cover !important;
+    object-fit: contain !important;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
 }
 #remote-video{
     position: fixed;
@@ -144,7 +169,7 @@ footer{
     left:0;
     height: 100vh;
     width: 100vw;
-    object-fit: cover !important;
+    object-fit: contain!important;
 }
 button{
     background: transparent;
@@ -175,15 +200,7 @@ button{
     width: 32px;
 }
 
-.open-chat{
-    position: absolute;
-    bottom: 40px;
-    right: 10px;
-}
-.open-chat i{
-    color: #fffc;
-    font-size: 44px;
-}
+
 @keyframes fade-in{
         0%{ opacity: 0;}
         100%{opacity: 1;}
@@ -263,20 +280,12 @@ button{
 }
 input[type="text"]{
     border: none;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1)
+    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.2)
 }
 input[type="text"]:focus{
     border: none;
     outline: none;
 }
-
-
-
-
-
-
-
-
 
 
 @media screen and (max-width:800px){
@@ -287,17 +296,17 @@ input[type="text"]:focus{
     flex: 3;
     margin-left: 10px;
     margin-right: 10px;
-}
+    }
 }
 @media screen and (max-width:550px){
     .chat-container{
         top: 10%;
         transform: translateY(-10%);
     }
-    .open-chat{
-        position: absolute;
-        bottom: 100px;
-        right: 10px;
+
+    .call-button i{
+        margin: 5px;
+        padding: 15px;
     }
     #self-video{
         min-width: 80px;

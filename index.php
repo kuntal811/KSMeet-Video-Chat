@@ -12,12 +12,12 @@
     <div class="pre-loader"></div>
     <div id='home'>
         <nav id=navbar>
-            <img src="logo.png">
+            <img id="logo" src="icon/logo1.png">
         </nav>
         <section id="main">
             <div class="hero">
                 <h1>Premium Video Chats. Now free for everyone.</h1>
-                <p>We re-engineered the service that we built for secure business meetings, Google Meet, to make it free and available for all.</p>
+                <p>We re-engineered the service that we built for secure personal meetings, KS Meet, to make it free and available for all.</p>
                 <div class="btn-div">
                     <button class="btn" id="create-room">
                         <span>
@@ -39,7 +39,13 @@
             </div>
         </section>
         <footer>
-            <p>Made with <3 by Kuntal Sarkar</p>
+            <div class="social-icon">
+                <a href="https://www.linkedin.com/in/kuntal811/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.facebook.com/kuntalsarkar0000" target="_blank"><i class="fab fa-facebook-square"></i></a>
+                <a href="https://www.instagram.com/kuntal_adi/" target="_blank"><i class="fab fa-instagram-square"></i></a>
+            </div>
+            <p>Made with <i class="fas fa-heart"></i> by Kuntal Sarkar</p>
+            <p>&copy; 2021 All Right Reserved</p>
         </footer>
     </div>
 
@@ -69,7 +75,8 @@
             <div id="meeting-link-container">
 
             </div>
-            <button class="open-chat" id="open-chat"><i class="fab fa-facebook-messenger"></i></button>
+           <!-- <button class="open-chat" id="open-chat"><i class="fab fa-facebook-messenger"></i></button>
+-->
             <div class="chat-container" id="chat-container">
                 <h2 class="chat-header">Chat</h2>
                 <div class="chat-wrapper" id="chat">
@@ -86,6 +93,7 @@
             <button id="mute-video"><i class="fas fa-video"></i></button>
             <button id="call-end"><i class="fas fa-phone"></i></button>
             <button id="share-screen"><i class="fas fa-desktop"></i></button>
+            <button class="open-chat" id="open-chat"><i class="fas fa-comment-alt"></i></i></button>
         </div>
     </div>
 <script src="https://kit.fontawesome.com/9b92be56de.js" crossorigin="anonymous"></script>

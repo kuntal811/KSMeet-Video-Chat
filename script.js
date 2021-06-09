@@ -5,10 +5,12 @@ let peer;
 let localStream;
 let selfStream;
 let remoteStreamTest;
+let currentPeer;
 let streamSetting = {
                         video: {
-                            width:  640,
-                            height: 360,
+                            frameRate:{ideal:10,max:15},
+                            width:  1080,
+                            height:  720,
                             },
                         audio:{
                                 echoCancellation: true,
@@ -22,10 +24,7 @@ var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || nav
 function setLocalVideo(){
     if(getUserMedia ){
         getUserMedia(
-            {
-                video: {width:640,height:360},
-                audio: false,
-            },
+            streamSetting,
             function(stream){
                 selfStream = stream;
                 var video = document.querySelector('#self-video');
@@ -35,11 +34,13 @@ function setLocalVideo(){
                 }
             },  
             function(err){
-                console.log(err);
+                alert('Something went wrong ! Please try again');
+                setTimeout(function(){window.location.reload()},2000);
             }
         );
     }else{
-        console.log("getuserMedia not supported ");
+        alert("Your browser is not supported ! Please use updated browsers.");
+            return;
     }
 }
 
@@ -51,14 +52,18 @@ document.getElementById('create-room').addEventListener('click',function(){
         return;
     }
     */
+   if(!getUserMedia){
+    alert("Your browser is not supported ! Please use updated browsers.");
+    return;
+   }
     document.getElementById('create-room').children[1].classList.add("fas","fa-circle-notch","fa-spin");
-   //createCanvas();
-   roomId = randomAlpha(3)+"-"+randomAlpha(3);
+
+    roomId = randomAlpha(3)+"-"+randomAlpha(3);
     //create peer with id
     peer = new Peer(roomId);
 
     peer.on('open',function(id){
-        console.log("peer id: "+id);
+        //console.log("peer id: "+id);
         //alert(id);
         if(getUserMedia ){
             getUserMedia(
@@ -72,11 +77,13 @@ document.getElementById('create-room').addEventListener('click',function(){
 
                 },  
                 function(err){
-                    console.log(err);
+                    alert('Something went wrong ! Please try again');
+                    setTimeout(function(){window.location.reload()},2000);
                 }
             );
         }else{
-            console.log("getuserMedia not supported ");
+            alert("Your browser is not supported ! Please use updated browsers.");
+            return;
         }
 
     });
@@ -86,9 +93,7 @@ document.getElementById('create-room').addEventListener('click',function(){
         data.on('stream',function(remoteStream){
          var video =  document.querySelector("#remote-video");
          remoteStreamTest = remoteStream;
-         remoteStream.getTracks()[0].onmute = function(){
-             alert("muted");
-         }
+        currentPeer = data.peerConnection;
          video.srcObject = remoteStream;
          video.play();
       });
@@ -124,6 +129,12 @@ document.getElementById('join-room').addEventListener('click',function(){
         alert('please enter room no');
         return;
     }
+    roomId = roomId.toLowerCase();
+    if(!getUserMedia){
+        alert("Your browser is not supported ! Please use updated browsers.");
+        return;
+       }
+
     document.getElementById('join-room').children[0].classList.add("fas","fa-circle-notch","fa-spin");
 
     peer = new Peer();
@@ -150,9 +161,10 @@ document.getElementById('join-room').addEventListener('click',function(){
                     createCanvas();
                     document.getElementById('join-room').children[0].classList.remove("fas","fa-circle-notch","fa-spin");
 
-                    var call = peer.call(roomId,localStream);
+                    let call = peer.call(roomId,localStream);
                     call.on('stream',function(stream){
                         document.getElementById('show-msg').innerHTML = "";
+                        currentPeer = call.peerConnection;
                         var video =  document.querySelector("#remote-video");
                         video.srcObject = stream;
                         video.play();
@@ -171,10 +183,53 @@ document.getElementById('join-room').addEventListener('click',function(){
         console.log("disconnected ");
         peer.destroy();
     });
+    peer.on('close', function() {
+        window.location.reload();
+    });
     
 });
+let isScreenShareOn = false;
+let screenVideo;
+document.getElementById('share-screen').addEventListener('click',function(){ 
+    if(!isScreenShareOn){
+        isScreenShareOn = true;
+        document.getElementById('share-screen').children[0].classList.remove('fas','fa-desktop');
+        document.getElementById('share-screen').children[0].classList.add('fas','fa-times');
 
+        navigator.mediaDevices.getDisplayMedia({
+            video: {
+                cursor:"always",
+            },
+            audio: true,
+        }).then((stream)=>{
+            screenVideo = stream.getVideoTracks()[0];
+            screenVideo.onended = function(){
+                stopScreenShare();
+            }
+            let sender = currentPeer.getSenders().find(function(e){
+                return e.track.kind == screenVideo.kind;
+            });
+            sender.replaceTrack(screenVideo);     
+        }).catch((err)=>{
+            console.log(err);
+        });
+    }else{
+        isScreenShareOn = false;
+        stopScreenShare();
+        document.getElementById('share-screen').children[0].classList.remove('fas','fa-times');
+        document.getElementById('share-screen').children[0].classList.add('fas','fa-desktop');
+    }
 
+});
+function stopScreenShare(){
+    let videoTrack = localStream.getVideoTracks()[0];
+    let sender = currentPeer.getSenders().find(function(e){
+        return e.track.kind == videoTrack.kind;
+    });
+    sender.replaceTrack(videoTrack);
+}
+
+/* utility functions */
 function randomAlpha(length) {
     var result           = [];
     var characters       = 'abcdefghijklmnopqrstuvwxyz';
@@ -200,6 +255,10 @@ function destroyCanvas(){
 //Send message function
 document.getElementById('send-msg').addEventListener('click',function(){
     let msg = document.getElementById('msg').value;
+    if(dataConnection == undefined){
+        alert('No one is connected to send message ! You can send message after joining anyone.');
+        return;
+    }
     dataConnection.send(msg);
     let html = '<p class="self-msg"><span>'+msg+'</span></p>';
     document.getElementById('chat').innerHTML += html;
@@ -235,7 +294,8 @@ document.getElementById('mute-video').addEventListener('click',function(){
         let elm = document.getElementById('mute-video').children[0];
         elm.classList.remove('fa-video-slash');
         elm.classList.add('fa-video');
-    } 
+    }
+        selfStream.getVideoTracks()[0]['enabled'] =!(selfStream.getVideoTracks()[0]['enabled']);
 });
 
 document.getElementById('call-end').addEventListener('click',function(){
@@ -243,29 +303,27 @@ document.getElementById('call-end').addEventListener('click',function(){
         localStream.getTracks().forEach((track)=>{track.stop()});
         selfStream.getTracks().forEach((track)=>{track.stop()});
         peer.disconnect();
+        peer.close();
         destroyCanvas();
     }
 
 });
-document.getElementById('share-screen').addEventListener('click',function(){
-    getUserMedia = navigator.getDisplayMedia;
 
-});
-
-document.getElementById('open-chat').addEventListener('click',function(e){
+document.getElementById('chat-container').style.display="none";
+document.getElementById('open-chat').onclick = function(e){
     let elm = document.getElementById('chat-container');
     if(elm.style.display == "none"){
         elm.style.display="block";
-        document.getElementById('open-chat').children[0].classList.remove('fab','fa-facebook-messenger');
+        document.getElementById('open-chat').children[0].classList.remove('fas','fa-comment-alt');
         document.getElementById('open-chat').children[0].classList.add('fas','fa-times');
     }else{
         elm.style.display="none";
         document.getElementById('open-chat').children[0].classList.remove('fas','fa-times');
-        document.getElementById('open-chat').children[0].classList.add('fab','fa-facebook-messenger');
+        document.getElementById('open-chat').children[0].classList.add('fas','fa-comment-alt');
     }
 
 
-});
+};
 
 document.querySelector('.copy-meeting-id').children[1].addEventListener('click',function(){
     let text = document.getElementById("meeting-id");
@@ -287,4 +345,3 @@ function scrollBottom(){
         elm.scrollTop = elm.scrollHeight;
     }
 }
-//##########################
