@@ -24,7 +24,13 @@ var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || nav
 function setLocalVideo(){
     if(getUserMedia ){
         getUserMedia(
-            streamSetting,
+            {
+                video: {
+                    width:  720,
+                    height:  480,
+                    },
+                audio: false,
+            },
             function(stream){
                 selfStream = stream;
                 var video = document.querySelector('#self-video');
