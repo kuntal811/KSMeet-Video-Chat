@@ -194,39 +194,45 @@ document.getElementById('join-room').addEventListener('click',function(){
     });
     
 });
-let isScreenShareOn = false;
-let screenVideo;
-document.getElementById('share-screen').addEventListener('click',function(){ 
-    if(!isScreenShareOn){
-        isScreenShareOn = true;
-        document.getElementById('share-screen').children[0].classList.remove('fas','fa-desktop');
-        document.getElementById('share-screen').children[0].classList.add('fas','fa-times');
+let displayMedia = navigator.mediaDevices.getDisplayMedia;
+if(displayMedia){
+	let isScreenShareOn = false;
+	let screenVideo;
+	document.getElementById('share-screen').addEventListener('click',function(){ 
+	    if(!isScreenShareOn){
+	        isScreenShareOn = true;
+	        document.getElementById('share-screen').children[0].classList.remove('fas','fa-desktop');
+	        document.getElementById('share-screen').children[0].classList.add('fas','fa-times');
 
-        navigator.mediaDevices.getDisplayMedia({
-            video: {
-                cursor:"always",
-            },
-            audio: true,
-        }).then((stream)=>{
-            screenVideo = stream.getVideoTracks()[0];
-            screenVideo.onended = function(){
-                stopScreenShare();
-            }
-            let sender = currentPeer.getSenders().find(function(e){
-                return e.track.kind == screenVideo.kind;
-            });
-            sender.replaceTrack(screenVideo);     
-        }).catch((err)=>{
-            console.log(err);
-        });
-    }else{
-        isScreenShareOn = false;
-        stopScreenShare();
-        document.getElementById('share-screen').children[0].classList.remove('fas','fa-times');
-        document.getElementById('share-screen').children[0].classList.add('fas','fa-desktop');
-    }
+	        navigator.mediaDevices.getDisplayMedia({
+	            video: {
+	                cursor:"always",
+	            },
+	            audio: true,
+	        }).then((stream)=>{
+	            screenVideo = stream.getVideoTracks()[0];
+	            screenVideo.onended = function(){
+	                stopScreenShare();
+	            }
+	            let sender = currentPeer.getSenders().find(function(e){
+	                return e.track.kind == screenVideo.kind;
+	            });
+	            sender.replaceTrack(screenVideo);     
+	        }).catch((err)=>{
+	            console.log(err);
+	        });
+	    }else{
+	        isScreenShareOn = false;
+	        stopScreenShare();
+	        document.getElementById('share-screen').children[0].classList.remove('fas','fa-times');
+	        document.getElementById('share-screen').children[0].classList.add('fas','fa-desktop');
+	    }
 
-});
+	});
+}else{
+	//hide screenshare button
+	document.getElementById('share-screen').remove();
+}
 function stopScreenShare(){
     let videoTrack = localStream.getVideoTracks()[0];
     let sender = currentPeer.getSenders().find(function(e){
